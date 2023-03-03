@@ -32,7 +32,14 @@ export default function App() {
         albumTitle,
         setAlbumTitle,
         addAlbum,
-        resetAlbumTitle 
+        resetAlbumTitle,
+        isDropdownOpen,
+        openDropDown,
+        closeDropDown,
+        albums,
+        selectAlbum,
+        deleteAlbum,
+
   } = useGallery();
 
   const onPressOpenGallery = () => {
@@ -41,6 +48,11 @@ export default function App() {
 
   const onLongPressImage = (imageId) => deleteImage(imageId);
 
+  const onPressBackdrop = () => {
+    closeModal();
+  }
+  const onLongPressAlbum = (albumId) => deleteAlbum(albumId)
+  
   const renderItem = ({ item: { id, uri }, index }) => {
     if (id === -1) {
       return (
@@ -71,15 +83,33 @@ export default function App() {
 
   const onPressAddAlbum = () => {
     openModal()
+    
   }
 
   const onSubmitEditing = () => {
+    if(!albumTitle) return;
     //1.앨범에 타이틀 추가
     addAlbum()
+    console.log('albumTitle', albumTitle)
     //2.모달 닫기 &TextInput의 value초기화
     closeModal();
     resetAlbumTitle(); 
+  
     
+}
+
+const onPressHeader = () => {
+  if(isDropdownOpen) {
+    closeDropDown()
+  } else {
+    openDropDown()
+  }
+  
+}
+
+const onPressAlbum = (album) => {
+  selectAlbum(album)
+  closeDropDown()
 }
 
   return (
@@ -88,7 +118,15 @@ export default function App() {
       {/* <Button title="갤러리 열기" onPress={onPressOpenGallery} /> */}
 
       {/* 앨범 DropDown, 앨범 추가 버튼  */}
-      <MyDropDownPicker selectedAlbumTitle={selectedAlbum.title} onPressAddAlbum={onPressAddAlbum}/>
+      <MyDropDownPicker 
+        selectedAlbum={selectedAlbum} 
+        onPressAddAlbum={onPressAddAlbum} 
+        onPressHeader={onPressHeader}
+        isDropdownOpen={isDropdownOpen}
+        albums={albums}
+        onPressAlbum={onPressAlbum}
+        onLongPressAlbum={onLongPressAlbum}
+        />
 
       {/* 앨범을 추가하는 TextInputModal */}
       <TextInputModal 
@@ -97,12 +135,14 @@ export default function App() {
         setAlbumTitle={setAlbumTitle}
         onSubmitEditing={onSubmitEditing}
         onPressBackdrop={onPressBackdrop}
+        onPressHeader={onPressHeader}
       />
       <FlatList
         data={imagesWithAddButton}
         renderItem={renderItem}
         //  horizontal
         numColumns={3}
+        style={{ zIndex: -2}}
       />
     </SafeAreaView>
   );

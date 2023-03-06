@@ -11,6 +11,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import BigImgModal from "./src/BigImgModal";
 import MyDropDownPicker from "./src/MyDropDownPicker";
 import TextInputModal from "./src/TextInputModal";
 
@@ -26,9 +27,9 @@ export default function App() {
     deleteImage, 
     imagesWithAddButton, 
     selectedAlbum,
-    modalVisible,
-        openModal,
-        closeModal, 
+    textInputModalVisible,
+    openTextInputModal,
+    closeTextInputModal, 
         albumTitle,
         setAlbumTitle,
         addAlbum,
@@ -39,6 +40,14 @@ export default function App() {
         albums,
         selectAlbum,
         deleteAlbum,
+        bigImgModalVisible,
+        openBigImgModal,
+        closeBigImgModal,
+        selectImage,
+        selectedImage,
+        moveToPreviousImage,
+        moveToNextImage,
+        
 
   } = useGallery();
 
@@ -48,12 +57,25 @@ export default function App() {
 
   const onLongPressImage = (imageId) => deleteImage(imageId);
 
-  const onPressBackdrop = () => {
-    closeModal();
+  const onPressTextInputModalBackdrop = () => {
+    closeTextInputModal();
   }
   const onLongPressAlbum = (albumId) => deleteAlbum(albumId)
-  
-  const renderItem = ({ item: { id, uri }, index }) => {
+
+  const onPressImage = (image) => {
+    //TODO: image
+    selectImage(image)
+    openBigImgModal();
+    
+
+  }
+
+  const onPressBigImgModalBackdrop = () => {
+    closeBigImgModal();
+  }
+
+  const renderItem = ({ item: image, index }) => {
+    const { id, uri } = image
     if (id === -1) {
       return (
         <TouchableOpacity
@@ -72,7 +94,7 @@ export default function App() {
     }
 
     return (
-      <TouchableOpacity onLongPress={() => onLongPressImage(id)}>
+      <TouchableOpacity onPress={() => onPressImage(image)} onLongPress={() => onLongPressImage(id)}>
         <Image
           source={{ uri }}
           style={{ width: columnSize, height: columnSize }}
@@ -82,7 +104,7 @@ export default function App() {
   };
 
   const onPressAddAlbum = () => {
-    openModal()
+    openTextInputModal()
     
   }
 
@@ -92,11 +114,14 @@ export default function App() {
     addAlbum()
     console.log('albumTitle', albumTitle)
     //2.모달 닫기 &TextInput의 value초기화
-    closeModal();
+    closeTextInputModal();
     resetAlbumTitle(); 
   
     
 }
+  const onPressBackdrop = () => {
+    closeTextInputModal()
+  }
 
 const onPressHeader = () => {
   if(isDropdownOpen) {
@@ -111,6 +136,14 @@ const onPressAlbum = (album) => {
   selectAlbum(album)
   closeDropDown()
 }
+
+const onPressLeftArrow = () => {
+  moveToPreviousImage()
+}
+const onPressRightArrow = () => {
+  moveToNextImage()
+}
+
 
   return (
     <SafeAreaView style={styles.container}>
@@ -127,16 +160,28 @@ const onPressAlbum = (album) => {
         onPressAlbum={onPressAlbum}
         onLongPressAlbum={onLongPressAlbum}
         />
+      {/* 이미지를 크게 보는 모달 */}
 
+     
+      
       {/* 앨범을 추가하는 TextInputModal */}
       <TextInputModal 
-        modalVisible={modalVisible}
+        modalVisible={textInputModalVisible}
         albumTitle={albumTitle}
         setAlbumTitle={setAlbumTitle}
         onSubmitEditing={onSubmitEditing}
-        onPressBackdrop={onPressBackdrop}
+        onPressBackdrop={onPressTextInputModalBackdrop}
         onPressHeader={onPressHeader}
       />
+
+       <BigImgModal
+      modalVisible={bigImgModalVisible}
+      onPressBackdrop={onPressBigImgModalBackdrop}
+      selectedImage={selectedImage}
+      onPressLeftArrow={onPressLeftArrow}
+      onPressRightArrow={onPressRightArrow}
+      />
+
       <FlatList
         data={imagesWithAddButton}
         renderItem={renderItem}

@@ -12,9 +12,12 @@ export const useGallery = () => {
     const [images, setImages] = useState([]);
     const [selectedAlbum, setSelectedAlbum] = useState(defaultAlbum)
     const [albums, setAlbums] = useState([defaultAlbum])
-    const [modalVisible, setModalVisible] = useState(false)
+    const [textInputModalVisible, setTextInputModalVisible] = useState(false)
+    const [bigImgModalVisible, setBigImgModalVisible] = useState(false)
     const [albumTitle, setAlbumTitle] = useState('')
     const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+    const [selectedImage, setSelectedImage] = useState(null)
+
     const pickImage = async () => {
       // No permissions request is necessary for launching the image library
       let result = await ImagePicker.launchImageLibraryAsync({
@@ -52,8 +55,10 @@ export const useGallery = () => {
         ])
     }
     
-    const openModal = () => setModalVisible(true);
-    const closeModal = () => setModalVisible(false);
+    const openTextInputModal = () => setTextInputModalVisible(true);
+    const closeTextInputModal = () => setTextInputModalVisible(false);
+    const openBigImgModal = () => setBigImgModalVisible(true);
+    const closeBigImgModal = () => setBigImgModalVisible(false);
     const openDropDown = () => setIsDropdownOpen(true);
     const closeDropDown = () => setIsDropdownOpen(false);
 
@@ -98,6 +103,18 @@ export const useGallery = () => {
             }
         ])
     }
+    const selectImage = (image) => {
+        setSelectedImage(image)
+    } 
+
+    const moveToPreviousImage = () => {
+        const selectedImageIndex = filteredImages.findIndex(image => image.id === selectedImage.id)
+        console.log('selectedImageIndex', selectedImageIndex)
+        const previousImageIdx = selectedImageIndex -1
+    }
+    const moveToNextImage = () => {
+        
+    }
     const resetAlbumTitle = () => setAlbumTitle('')
 
     const filteredImages = images.filter((image)=> image.albumId === selectedAlbum.id )
@@ -124,9 +141,9 @@ export const useGallery = () => {
         deleteImage,
         imagesWithAddButton,
         selectedAlbum,
-        modalVisible,
-        openModal,
-        closeModal,
+        textInputModalVisible,
+        openTextInputModal,
+        closeTextInputModal,
         albumTitle,
         setAlbumTitle,
         addAlbum,
@@ -136,7 +153,15 @@ export const useGallery = () => {
         closeDropDown,
         albums,
         selectAlbum,
-        deleteAlbum
+        deleteAlbum,
+        bigImgModalVisible,
+        openBigImgModal,
+        closeBigImgModal,
+        selectImage,
+        selectedImage,
+        moveToPreviousImage,
+        moveToNextImage,
+        
        
 
 

@@ -2,7 +2,7 @@ import { Pressable, ViewComponent } from "react-native";
 import { KeyboardAvoidingView, SafeAreaView, TextInput } from "react-native";
 import { Modal, View } from "react-native";
 
-export default ({modalVisible , albumTitle, setAlbumTitle, onSubmitEditing, onPressBackdrop}) => {
+export default ({modalVisible , albumTitle, setAlbumTitle, onSubmitEditing, onPressTextInputModalBackdrop}) => {
 
   return (
     <Modal
@@ -13,7 +13,7 @@ export default ({modalVisible , albumTitle, setAlbumTitle, onSubmitEditing, onPr
         <KeyboardAvoidingView  
             behavior={Platform.OS === "ios" ? "padding" : "height"} 
             style={{ flex: 1}}>
-            <Pressable onPress={onPressBackdrop} style={{ flex: 1 }}>
+            <Pressable onPress={onPressTextInputModalBackdrop} style={{ flex: 1 }}>
                 <SafeAreaView style={{ flex: 1 , width: "100%", position: "absolute", bottom: 0}}>
                      <TextInput
                         placeholder="앨범명을 입력하세요" 

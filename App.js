@@ -1,6 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import {
+  Alert,
   Button,
   Dimensions,
   FlatList,
@@ -47,6 +48,9 @@ export default function App() {
         selectedImage,
         moveToPreviousImage,
         moveToNextImage,
+        showPreviousArrow,
+        showNextArrow
+        
         
 
   } = useGallery();
@@ -61,6 +65,10 @@ export default function App() {
     closeTextInputModal();
   }
   const onLongPressAlbum = (albumId) => deleteAlbum(albumId)
+
+  const onPressWatchAd = () => {
+    console.log('load on')
+  }
 
   const onPressImage = (image) => {
     //TODO: image
@@ -102,9 +110,23 @@ export default function App() {
       </TouchableOpacity>
     );
   };
-
+  
   const onPressAddAlbum = () => {
-    openTextInputModal()
+    if(albums.length >= 2 ){
+      Alert.alert("광고를 시청해야 앨범을 추가 할 수 있습니다.", "", [
+        {
+          style: "cancel",
+          text: "닫기"
+        },
+        {
+          text: "광고 시청",
+          onPress: onPressWatchAd,
+        }
+      ])
+    } else {
+      openTextInputModal()
+    }
+  
     
   }
 
@@ -138,9 +160,11 @@ const onPressAlbum = (album) => {
 }
 
 const onPressLeftArrow = () => {
+  console.log('left')
   moveToPreviousImage()
 }
 const onPressRightArrow = () => {
+  console.log('right')
   moveToNextImage()
 }
 
@@ -180,6 +204,8 @@ const onPressRightArrow = () => {
       selectedImage={selectedImage}
       onPressLeftArrow={onPressLeftArrow}
       onPressRightArrow={onPressRightArrow}
+      showPreviousArrow={showPreviousArrow}
+      showNextArrow={showNextArrow}
       />
 
       <FlatList

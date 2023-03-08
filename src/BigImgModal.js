@@ -1,11 +1,13 @@
 import { Image, Modal, Pressable, TouchableOpacity, View } from "react-native";
 import { SimpleLineIcons } from "@expo/vector-icons";
 
-const ArrowButton = ({iconName, onPress}) => {
-
-    {/* < , > 버튼 */}
+const ArrowButton = ({ iconName, onPress, disabled }) => {
+  {
+    /* < , > 버튼 */
+  }
   <TouchableOpacity
     onPress={onPress}
+    disabled={disabled}
     style={{
       justifyContent: "center",
       alignItems: "center",
@@ -14,17 +16,23 @@ const ArrowButton = ({iconName, onPress}) => {
       backgroundColor: "lightblue",
     }}
   >
-    <SimpleLineIcons name={iconName} size={20} color="black" />
+    <SimpleLineIcons
+      name={iconName}
+      size={20}
+      color={disabled ? "transparent" : "black"}
+    />
   </TouchableOpacity>;
 };
 
-export default ({ 
-    modalVisible, 
-    onPressBackdrop, 
-    selectedImage,
-    onPressLeftArrow,
-    onPressRightArrow,
-     }) => {
+export default ({
+  modalVisible,
+  onPressBackdrop,
+  selectedImage,
+  onPressLeftArrow,
+  onPressRightArrow,
+  showPreviousArrow,
+  showNextArrow,
+}) => {
   return (
     <Modal animationType="fade" transparent={true} visible={modalVisible}>
       <Pressable
@@ -39,8 +47,26 @@ export default ({
         }}
       >
         <View style={{ flexDirection: "row", alignItems: "center" }}>
+          {showPreviousArrow && (
+            <SimpleLineIcons
+              name="arrow-left"
+              onPress={onPressLeftArrow}
+              style={{
+                // justifyContent: "center",
+                // alignItems: "center",
+                paddingHorizontal: 20,
+                height: "100%",
+                backgroundColor: "lightblue",
+              }}
+            ></SimpleLineIcons>
+          )}
           {/* < 버튼  */}
-          <ArrowButton iconName='arrow-left' onPress={onPressLeftArrow}/>
+
+          {/* <ArrowButton 
+          iconName="arrow-left"
+          onPress={onPressLeftArrow}
+          disabled={!showPreviousArrow}
+          /> */}
 
           {/* 이미지 */}
           <Pressable>
@@ -56,7 +82,26 @@ export default ({
           </Pressable>
 
           {/* > 버튼  */}
-          <ArrowButton iconName='arrow-right' onPress={onPressRightArrow}/>
+          {showNextArrow && (
+            <SimpleLineIcons
+              name="arrow-right"
+              onPress={onPressRightArrow}
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+                paddingHorizontal: 20,
+                height: "100%",
+                backgroundColor: "lightblue",
+              }}
+              disabled={!showNextArrow}
+            ></SimpleLineIcons>
+          )}
+
+          {/* <ArrowButton
+          iconName="arrow-right" 
+          onPress={onPressRightArrow}
+          disabled={!showNextArrow}
+          /> */}
         </View>
       </Pressable>
     </Modal>
